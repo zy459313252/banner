@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>banner</title>
+	<style type="text/css">
+		*{
+			margin: 0px;
+			padding:0px;
+		}
+		body{
+			background: #000;
+		}
+		#box{
+			width:100%;
+			height: 360px;
+			margin: 200px auto;
+			position: relative;
+		}
+		#box img{
+			width:100%;
+			height: 360px;
+		}
+		#box span{
+			position: absolute;
+			top:130px;
+			width:30px;
+			height: 60px;
+			line-height: 60px;
+			background: #000;
+			text-align: center;
+			color:#fff;
+			font-size:30px;
+			opacity: 0.5;
+			cursor: pointer;
+		}
+		#box .prev{
+			left:20px;
+			opacity: 0;
+		}
+		#box .next{
+			right:20px;
+			opacity: 0;
+		}
+		#box:hover .prev,#box:hover .next{
+			transition: opacity 0.4s;
+			opacity: 0.4;
+		}
+		#btns{
+			list-style: none;
+			position: absolute;
+			bottom: 15px;
+			left:45%;
+		}
+		#btns li{
+			float: left;
+			width:15px;
+			height: 15px;
+			border-radius: 50%;
+			margin-right: 20px;
+			background: #000;
+			opacity: 0.5;
+		}
+		#btns li.active{
+			background: #fff;
+		}
+	</style>
+</head>
+<body>
+	<div id="box">
+		<span class="prev"><</span>
+		<span class="next">></span>
+		<img id="banner_img" src="images/banner1.jpg">
+		<ul id="btns">
+			<li class="active"></li>
+			<li></li>
+			<li></li>
+		</ul>
+	</div>
+	<script type="text/javascript">
+		window.onload = function(){
+			var banImg = document.getElementById('banner_img');
+			var prev = document.getElementsByClassName('prev')[0];
+			var next = document.getElementsByClassName('next')[0];
+			var btns = document.getElementById('btns');
+			var lis = btns.getElementsByTagName('li');
+
+			var images = ['images/banner1.jpg','images/banner2.jpg','images/banner3.jpg'];
+			var index = 0;
+			function changeImg(){
+				index ++;
+				if(index >= images.length){
+					index = 0;
+				}
+				banImg.src = images[index];
+				selectIndex(index);
+			}
+			var timer = window.setInterval(changeImg,2000);
+
+			function selectIndex(index){
+				for(var i=0; i<lis.length; i++){
+					if(index == i){
+						lis[i].className = "active";
+					} else{
+						lis[i].className = "";
+					}
+				}
+			}
+
+			for(var i=0; i<lis.length; i++){
+				lis[i].setAttribute('index',i);
+				lis[i].onmouseover = function(){
+					clearInterval(timer);
+					index = this.getAttribute('index');
+					for(var i=0; i<lis.length; i++){
+						if(index == i){
+							banImg.src = images[index];
+							selectIndex(index);
+						}
+					}
+				}
+				lis[i].onmouseout = function(){
+					timer = window.setInterval(changeImg,2000);
+				}
+			}
+
+			banImg.onmouseover = function(){
+				clearInterval(timer);
+			}
+			banImg.onmouseout = function(){
+				timer = window.setInterval(changeImg,2000);
+			}
+
+			prev.onmouseover = function(){
+				clearInterval(timer);
+			}
+			prev.onclick = function(){
+				index --;
+				if(index < 0){
+					index = images.length -1;
+				}
+				banImg.src = images[index];
+				selectIndex(index);
+			}
+
+			next.onmouseover = function(){
+				clearInterval(timer);
+			}
+			next.onclick = function(){
+				index ++;
+				if(index >= images.length){
+					index = 0;
+				}
+				banImg.src = images[index];
+				selectIndex(index);
+			}
+		}
+	</script>
+</body>
+</html>
